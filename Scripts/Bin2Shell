@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+if [ $# != 2 ]; then
+	echo "Usage: Bin2Shell [ELF] [SHELL]"
+	echo "------------------------------"
+	echo "ELF   - The object file."
+	echo "SHELL - The target file."
+fi
+
+SIZE=$[$(objdump -h $1 | grep .text | awk '{print "0x"$3}')]
+OFFSET=$[$(objdump -h $1 | grep .text | awk '{print "0x"$6}')]
+
+echo SIZE: $SIZE
+echo OFFSET: $OFFSET
+
+dd bs=1 skip=$OFFSET count=$SIZE if=$1 of=$2
